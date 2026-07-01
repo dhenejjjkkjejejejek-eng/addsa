@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Epic Gift Hub — License</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d0e10;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* animated background */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+.bg-grad{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(6,112,240,.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(139,63,199,.1) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(10,138,63,.08) 0%,transparent 50%),#0d0e10}
+.particles{position:absolute;inset:0}
+.p{position:absolute;border-radius:50%;animation:drift linear infinite;opacity:0}
+@keyframes drift{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+
+/* card */
+.card{position:relative;z-index:1;width:440px;max-width:94vw;background:linear-gradient(160deg,#1a1d24,#141720);border:1px solid rgba(6,112,240,.2);border-radius:16px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);animation:cardIn .6s cubic-bezier(.175,.885,.32,1.1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+
+/* top accent bar */
+.accent-bar{height:3px;background:linear-gradient(to right,#0670f0,#8b3fc7,#0670f0);background-size:200% 100%;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* header */
+.card-header{padding:32px 36px 24px;text-align:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.epic-logo-wrap{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px}
+.epic-logo-box{width:38px;height:38px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.epic-logo-box svg{display:block}
+.brand-name{font-size:17px;font-weight:800;letter-spacing:.5px}
+.card-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
+.card-sub{font-size:13px;color:#8f98a0;line-height:1.5}
+
+/* body */
+.card-body{padding:28px 36px 32px}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8f98a0;margin-bottom:8px;display:block}
+.key-input-wrap{position:relative;margin-bottom:6px}
+.key-input{width:100%;background:#0d0e10;border:1.5px solid #2c2e33;color:#fff;font-size:14px;padding:13px 46px 13px 16px;border-radius:8px;outline:none;font-family:monospace;letter-spacing:1px;transition:border-color .2s,box-shadow .2s}
+.key-input:focus{border-color:#0670f0;box-shadow:0 0 0 3px rgba(6,112,240,.15)}
+.key-input::placeholder{color:#3a4050;letter-spacing:0;font-family:inherit}
+.key-input.error{border-color:#e0395a;box-shadow:0 0 0 3px rgba(224,57,90,.12)}
+.key-input.success{border-color:#0a8a3f;box-shadow:0 0 0 3px rgba(10,138,63,.15)}
+.key-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#5a6070;cursor:pointer;font-size:16px;padding:2px}
+.key-eye:hover{color:#fff}
+.hwid-note{font-size:11px;color:#5a6070;margin-bottom:20px;display:flex;align-items:center;gap:6px}
+.hwid-dot{width:6px;height:6px;border-radius:50%;background:#0670f0;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,#0670f0,#0558cc);color:#fff;border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;margin-bottom:16px}
+.submit-btn:hover{background:linear-gradient(135deg,#1c7eff,#0670f0);transform:translateY(-1px);box-shadow:0 8px 24px rgba(6,112,240,.35)}
+.submit-btn:active{transform:scale(.98)}
+.submit-btn:disabled{opacity:.5;cursor:default;transform:none}
+.submit-btn .btn-text{transition:opacity .2s}
+.submit-btn.loading .btn-text{opacity:0}
+.btn-spinner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .btn-spinner{display:block}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* status message */
+.status-msg{border-radius:7px;padding:11px 14px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;margin-bottom:16px}
+.status-msg.show{display:flex;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.status-msg.err{background:rgba(224,57,90,.1);border:1px solid rgba(224,57,90,.3);color:#f87171}
+.status-msg.ok{background:rgba(10,138,63,.1);border:1px solid rgba(10,138,63,.3);color:#4ade80}
+.status-icon{font-size:16px;flex-shrink:0}
+
+/* divider */
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:11px;color:#3a4050}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#1f2330}
+
+/* footer links */
+.card-footer-links{display:flex;justify-content:center;gap:20px}
+.card-footer-links a{font-size:12px;color:#5a6070;text-decoration:none;transition:color .15s}
+.card-footer-links a:hover{color:#fff}
+
+/* success screen */
+.success-screen{display:none;text-align:center;padding:40px 36px}
+.success-screen.show{display:block;animation:fadeUp .4s ease}
+.success-check{width:72px;height:72px;border-radius:50%;background:rgba(10,138,63,.15);border:2px solid #0a8a3f;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px;animation:popIn .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{font-size:20px;font-weight:800;color:#4ade80;margin-bottom:6px}
+.success-sub{font-size:13px;color:#8f98a0;margin-bottom:24px}
+.enter-btn{display:inline-block;background:linear-gradient(135deg,#0670f0,#0558cc);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none}
+.enter-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(6,112,240,.35)}
+
+/* hwid badge */
+.hwid-badge{background:#0d0e10;border:1px solid #1f2330;border-radius:6px;padding:8px 12px;font-size:10px;color:#3a4050;font-family:monospace;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.hwid-badge span{color:#5a6070}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="bg-grad"></div>
+  <div class="particles" id="particles"></div>
+</div>
+
+<div class="card">
+  <div class="accent-bar"></div>
+
+  <div id="loginForm">
+    <div class="card-header">
+      <div class="epic-logo-wrap">
+        <div class="epic-logo-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 2h20v20H2V2z" fill="#111"/><path d="M6 6h5v2H8v3h2.5v2H8v3h3v2H6V6zm7 0h5v2h-3v8h-2V6z" fill="#fff"/></svg>
+        </div>
+        <span class="brand-name">Epic Gift Hub</span>
+      </div>
+      <div class="card-title">Enter License Key</div>
+      <div class="card-sub">Your key is locked to this browser.<br>Access is limited to one device at a time.</div>
+    </div>
+
+    <div class="card-body">
+      <div class="hwid-badge">
+        <span>Browser ID:</span>
+        <span id="hwidDisplay">Generating...</span>
+      </div>
+
+      <label class="form-label" for="keyInput">License Key</label>
+      <div class="key-input-wrap">
+        <input class="key-input" id="keyInput" type="password" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button class="key-eye" id="eyeBtn" onclick="toggleShow()">👁️</button>
+      </div>
+      <div class="hwid-note">
+        <div class="hwid-dot"></div>
+        HWID locked — 1 browser per key
+      </div>
+
+      <div class="status-msg" id="statusMsg">
+        <span class="status-icon" id="statusIcon"></span>
+        <span id="statusText"></span>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitKey()">
+        <span class="btn-text">Activate Key</span>
+        <div class="btn-spinner"></div>
+      </button>
+
+      <div class="divider">or</div>
+      <div class="card-footer-links">
+        <a href="https://keyauth.cc" target="_blank">Get a key</a>
+        <a href="https://discord.gg" target="_blank">Support</a>
+        <a href="#" onclick="resetHWID()">Reset HWID</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-check">✓</div>
+    <div class="success-title">Access Granted!</div>
+    <div class="success-sub" id="successSub">Welcome back. Your key is valid.</div>
+    <button class="enter-btn" onclick="enterApp()">Enter Epic Gift Hub →</button>
+  </div>
+</div>
+
+<script>
+// ── HWID: fingerprint this browser uniquely ──────────────────
+function generateHWID(){
+  const nav = window.navigator;
+  const screen = window.screen;
+  const raw = [
+    nav.userAgent, nav.language, nav.hardwareConcurrency,
+    screen.colorDepth, screen.width+'x'+screen.height,
+    nav.platform, Intl.DateTimeFormat().resolvedOptions().timeZone,
+    nav.cookieEnabled, nav.doNotTrack,
+    new Date().getTimezoneOffset()
+  ].join('|');
+  // Simple but consistent hash
+  let hash = 0;
+  for(let i=0;i<raw.length;i++){ hash = ((hash<<5)-hash)+raw.charCodeAt(i); hash|=0; }
+  const hex = Math.abs(hash).toString(16).toUpperCase().padStart(8,'0');
+  return hex.match(/.{1,4}/g).join('-');
+}
+
+const HWID = generateHWID();
+document.getElementById('hwidDisplay').textContent = HWID;
+
+// ── KEYAUTH integration ──────────────────────────────────────
+const KEYAUTH = {
+  name: 'Tiktok thingy',
+  ownerid: '7XHJEUPgHh',
+  version: '1.0',
+  apiUrl: 'https://keyauth.win/api/1.2/'
+};
+
+async function keyauthRequest(params){
+  const body = new URLSearchParams({
+    type: params.type,
+    name: KEYAUTH.name,
+    ownerid: KEYAUTH.ownerid,
+    ver: KEYAUTH.version,
+    ...params.extra
+  });
+  const res = await fetch(KEYAUTH.apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  });
+  return await res.json();
+}
+
+let sessionId = null;
+
+async function initSession(){
+  try {
+    const data = await keyauthRequest({ type: 'init', extra: {} });
+    if(data.success) sessionId = data.sessionid;
+    return data.success;
+  } catch(e){ return false; }
+}
+
+async function licenseKey(key, hwid){
+  try {
+    const data = await keyauthRequest({
+      type: 'license',
+      extra: { key, sessionid: sessionId, hwid }
+    });
+    return data;
+  } catch(e){ return { success: false, message: 'Network error. Check your connection.' }; }
+}
+
+// ── UI logic ─────────────────────────────────────────────────
+let keyVisible = false;
+function toggleShow(){
+  keyVisible = !keyVisible;
+  document.getElementById('keyInput').type = keyVisible ? 'text' : 'password';
+  document.getElementById('eyeBtn').textContent = keyVisible ? '🙈' : '👁️';
+}
+
+function showStatus(type, icon, text){
+  const el = document.getElementById('statusMsg');
+  el.className = 'status-msg show ' + type;
+  document.getElementById('statusIcon').textContent = icon;
+  document.getElementById('statusText').textContent = text;
+}
+function hideStatus(){ document.getElementById('statusMsg').className = 'status-msg'; }
+
+document.getElementById('keyInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') submitKey();
+});
+
+async function submitKey(){
+  const key = document.getElementById('keyInput').value.trim();
+  if(!key){ showStatus('err','⚠️','Please enter your license key.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  hideStatus();
+
+  // Init KeyAuth session
+  showStatus('','⏳','Connecting to license server...');
+  const inited = await initSession();
+  if(!inited){
+    showStatus('err','❌','Could not reach license server. Try again.');
+    btn.disabled=false; btn.classList.remove('loading'); return;
+  }
+
+  // Validate key with HWID
+  showStatus('','🔐','Validating key...');
+  const result = await licenseKey(key, HWID);
+
+  btn.disabled=false;
+  btn.classList.remove('loading');
+
+  if(result.success){
+    document.getElementById('keyInput').classList.add('success');
+    showStatus('ok','✓','Key valid! Loading...');
+    // Store validated session locally
+    sessionStorage.setItem('egh_auth', JSON.stringify({ key, hwid: HWID, session: sessionId, ts: Date.now() }));
+    setTimeout(showSuccess, 800);
+  } else {
+    document.getElementById('keyInput').classList.add('error');
+    const msg = result.message || 'Invalid key.';
+    if(msg.toLowerCase().includes('hwid') || msg.toLowerCase().includes('hardware')){
+      showStatus('err','🔒', 'HWID mismatch — this key is already locked to a different browser.');
+    } else if(msg.toLowerCase().includes('expire')){
+      showStatus('err','⏰','Your key has expired. Purchase a new one.');
+    } else if(msg.toLowerCase().includes('ban')){
+      showStatus('err','🚫','This key has been banned.');
+    } else {
+      showStatus('err','❌', msg);
+    }
+    // Shake input
+    const input = document.getElementById('keyInput');
+    input.style.animation='shake .4s ease';
+    setTimeout(()=>input.style.animation='',400);
+  }
+}
+
+function showSuccess(){
+  document.getElementById('loginForm').style.display='none';
+  document.getElementById('successScreen').style.display='block';
+  document.getElementById('successScreen').classList.add('show');
+  const auth = JSON.parse(sessionStorage.getItem('egh_auth')||'{}');
+  document.getElementById('successSub').textContent = `Welcome! Session ID: ${(auth.session||'').slice(0,12)}...`;
+}
+
+function enterApp(){
+  window.location.href = '/';
+}
+
+function resetHWID(){
+  if(confirm('This will clear your stored session. You may need to contact support to reset your key\'s HWID on KeyAuth.\n\nContinue?')){
+    sessionStorage.removeItem('egh_auth');
+    location.reload();
+  }
+}
+
+// ── Check if already authed this session ────────────────────
+const existing = sessionStorage.getItem('egh_auth');
+if(existing){
+  try {
+    const auth = JSON.parse(existing);
+    // Re-validate same HWID
+    if(auth.hwid === HWID){
+      showSuccess();
+    } else {
+      sessionStorage.removeItem('egh_auth');
+    }
+  } catch(e){ sessionStorage.removeItem('egh_auth'); }
+}
+
+// ── Shake animation ──────────────────────────────────────────
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+document.head.appendChild(shakeStyle);
+
+// ── Floating particles ───────────────────────────────────────
+const pWrap = document.getElementById('particles');
+const colors = ['#0670f0','#8b3fc7','#0a8a3f','#ffffff','#e08a1d'];
+for(let i=0;i<28;i++){
+  const p = document.createElement('div');
+  p.className = 'p';
+  const size = 2+Math.random()*4;
+  p.style.cssText = `width:${size}px;height:${size}px;background:${colors[i%colors.length]};left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;opacity:0`;
+  pWrap.appendChild(p);
+}
+</script>
+</body>
+</html>

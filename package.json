@@ -1,0 +1,15 @@
+{
+  "name": "epic-gift-hub",
+  "version": "1.0.0",
+  "description": "Epic Games V-Bucks Gift Hub concept demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "express": "*",
+    "html-minifier-terser": "^7.2.0",
+    "jsdom": "^29.1.1"
+  }
+}

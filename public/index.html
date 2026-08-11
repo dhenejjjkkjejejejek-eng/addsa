@@ -127,20 +127,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 #LAYOUT_C{display:none}
 .phone-stage{display:flex;justify-content:center;padding:36px 16px 70px}
 .phone-frame{position:relative;width:390px;max-width:100%;height:844px;background:#0d0e10;border-radius:54px;border:12px solid #1a1a1c;box-shadow:0 0 0 2px #000,0 40px 100px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.04);overflow:hidden}
-.phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#000;border-radius:16px;z-index:50}
-.phone-statusbar{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px 26px 4px;font-size:15px;font-weight:700;color:#fff}
+.phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#000;border-radius:16px;z-index:900;pointer-events:none}
+.phone-statusbar{position:absolute;top:0;left:0;right:0;z-index:850;display:flex;align-items:center;justify-content:space-between;padding:16px 26px 4px;font-size:15px;font-weight:700;color:#fff;pointer-events:none;background:linear-gradient(to bottom,rgba(13,14,16,.55),transparent)}
 .status-icons{display:flex;align-items:center;gap:5px}
 .phone-screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .phone-screen::-webkit-scrollbar{display:none}
-.phone-home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:rgba(255,255,255,.9);border-radius:3px;z-index:60}
+.phone-home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:rgba(255,255,255,.9);border-radius:3px;z-index:900;pointer-events:none}
 
 /* ── Top bar / profile / shop header ── */
-.fa-topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;padding:14px 16px 12px;background:rgba(13,14,16,.94);backdrop-filter:blur(10px);border-bottom:1px solid #1c1e24}
+.fa-topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;padding:44px 16px 12px;background:rgba(13,14,16,.94);backdrop-filter:blur(10px);border-bottom:1px solid #1c1e24}
 .fa-hamburger{background:none;border:none;color:#fff;font-size:19px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1}
 .fa-wordmark{font-size:15px;font-weight:900;letter-spacing:.6px;color:#fff;font-style:italic;white-space:nowrap}
 .fa-vbucks-pill{margin-left:auto;display:flex;align-items:center;gap:6px;background:#17181b;border:1px solid #2c2e33;padding:6px 12px;border-radius:16px;cursor:pointer;transition:border-color .15s;flex-shrink:0}
 .fa-vbucks-pill:hover{border-color:var(--blue)}
-.fa-vbucks-pill .coin{width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,#0670f0,#0455cc);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0}
+.fa-vbucks-pill .coin{width:20px;height:20px;object-fit:contain;flex-shrink:0}
 .fa-vbucks-pill span{font-size:12px;font-weight:800;color:#fff}
 .fa-install-pill{background:var(--blue);color:#fff;font-size:11px;font-weight:800;padding:7px 13px;border-radius:16px;border:none;cursor:default;flex-shrink:0}
 
@@ -151,9 +151,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .fa-icon-btn{width:28px;height:28px;border-radius:8px;background:#17181b;border:1px solid #2c2e33;color:#8a8f99;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .15s}
 .fa-icon-btn:hover{color:#fff;border-color:#454850}
 
-.fa-shop-header{text-align:center;padding:20px 20px 4px}
-.fa-shop-title{font-size:20px;font-weight:900;color:#fff;letter-spacing:.5px}
-.fa-shop-sub{font-size:10px;font-weight:700;color:#5a6070;letter-spacing:1px;margin-top:4px;text-transform:uppercase}
+.fa-shop-header{position:relative;text-align:center;padding:26px 20px 16px;overflow:hidden}
+.fa-shop-header::before{content:'';position:absolute;inset:-20px 0 0;background:radial-gradient(ellipse 70% 100% at 50% 0%,rgba(139,63,199,.5) 0%,rgba(214,51,199,.28) 35%,rgba(6,112,240,.12) 60%,transparent 80%);pointer-events:none;z-index:0}
+.fa-shop-title{position:relative;z-index:1;font-size:22px;font-weight:900;color:#fff;letter-spacing:.5px;text-shadow:0 0 24px rgba(200,80,220,.5)}
+.fa-shop-sub{position:relative;z-index:1;font-size:10px;font-weight:700;color:#a89ab5;letter-spacing:1px;margin-top:5px;text-transform:uppercase}
 
 /* ── Featured banner ── */
 .fa-featured{margin:16px 16px 4px;border-radius:16px;overflow:hidden;background:#111;border:1px solid #232529;position:relative;display:none}
@@ -178,31 +179,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 
 .fa-grid-wrap{flex:1;min-width:0;padding-right:16px}
 .fa-grid-title{font-size:12px;font-weight:800;color:#8a8f99;letter-spacing:.5px;margin-bottom:12px}
-.fa-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fa-card{background:#17181b;border:1px solid #232529;border-radius:14px;overflow:hidden;animation:fadeUp .35s ease both;display:flex;flex-direction:column}
-.fa-card-img-wrap{position:relative;aspect-ratio:3/4;background:#111}
+.fa-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fa-card{background:#17181b;border:1px solid #232529;border-radius:14px;animation:fadeUp .35s ease both;display:flex;flex-direction:column}
+.fa-card-img-wrap{position:relative;aspect-ratio:3/4;background:#111;border-radius:14px 14px 0 0;overflow:hidden;flex-shrink:0}
 .fa-card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.fa-rarity-badge{position:absolute;top:7px;left:7px;font-size:8px;font-weight:900;color:#fff;padding:3px 7px;border-radius:5px;letter-spacing:.4px}
-.fa-card-name{font-size:12px;font-weight:800;color:#fff;padding:9px 9px 0;line-height:1.25}
-.fa-card-sub{font-size:9px;color:#5a6070;padding:2px 9px 0;text-transform:uppercase;letter-spacing:.2px}
-.fa-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:9px}
-.fa-card-price{font-size:12px;font-weight:800;color:#0fc864}
-.fa-gift-btn{background:var(--blue);color:#fff;border:none;font-size:10px;font-weight:800;padding:7px 10px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:3px;transition:background .15s;flex-shrink:0}
+.fa-rarity-badge{position:absolute;top:8px;left:8px;font-size:9px;font-weight:900;color:#fff;padding:4px 8px;border-radius:6px;letter-spacing:.4px}
+.fa-card-name{font-size:13px;font-weight:800;color:#fff;padding:10px 10px 0;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fa-card-sub{font-size:10px;color:#5a6070;padding:2px 10px 0;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fa-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:10px;margin-top:auto}
+.fa-card-price{font-size:13px;font-weight:800;color:#0fc864}
+.fa-gift-btn{background:var(--blue);color:#fff;border:none;font-size:11px;font-weight:800;padding:8px 12px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .15s;flex-shrink:0}
 .fa-gift-btn:hover{background:var(--blue-h)}
 
 .fa-empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:#5a6070;font-size:12px;line-height:1.6}
 .fa-empty .em{font-size:28px;display:block;margin-bottom:10px}
 
-.fa-vbucks-list{display:none;flex-direction:column;gap:10px}
-.fa-vb-row{display:flex;align-items:center;gap:12px;background:#17181b;border:1px solid #232529;border-radius:14px;padding:12px 14px}
-.fa-vb-icon{width:38px;height:38px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#26282c}
-.fa-vb-mid{flex:1;min-width:0}
-.fa-vb-amt{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
-.fa-vb-amt-new{font-size:16px;font-weight:800;color:#fff}
-.fa-vb-amt-old{font-size:12px;color:#5a6070;text-decoration:line-through}
-.fa-vb-bonus{background:#22262e;color:#c9cdd6;font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;margin-top:5px;display:inline-block}
-.fa-vb-buy{background:var(--blue);border:none;color:#fff;font-size:13px;font-weight:800;padding:10px 16px;border-radius:10px;cursor:pointer;flex-shrink:0;transition:background .15s}
-.fa-vb-buy:hover{background:var(--blue-h)}
+.fa-vbucks-list{display:none;grid-template-columns:1fr 1fr;gap:14px}
+.fa-vbcard{background:#17181b;border:1px solid #232529;border-radius:16px;display:flex;flex-direction:column;animation:fadeUp .35s ease both}
+.fa-vbcard-img-wrap{position:relative;aspect-ratio:1/1;background:radial-gradient(circle at 50% 35%,#1c2f45,#0d1520);border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden}
+.fa-vbcard-img-wrap img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.fa-vbcard-bonus-badge{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:9px;font-weight:900;padding:3px 8px;border-radius:6px;letter-spacing:.3px}
+.fa-vbcard-body{padding:11px 12px}
+.fa-vbcard-amt{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.fa-vbcard-amt-new{font-size:17px;font-weight:900;color:#fff}
+.fa-vbcard-amt-old{font-size:11px;color:#5a6070;text-decoration:line-through}
+.fa-vbcard-sub{font-size:9px;color:#5a6070;text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
+.fa-vbcard-bottom{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px}
+.fa-vbcard-price{font-size:12px;font-weight:800;color:#0fc864}
+.fa-vbcard-buy{background:var(--blue);border:none;color:#fff;font-size:11px;font-weight:800;padding:8px 12px;border-radius:9px;cursor:pointer;flex-shrink:0;transition:background .15s;display:flex;align-items:center;gap:4px}
+.fa-vbcard-buy:hover{background:var(--blue-h)}
 
 /* ── Slide-in screens (gift / verify / processing) ── */
 .fa-slide-screen{position:absolute;inset:0;background:#0d0e10;transform:translateX(100%);transition:transform .32s cubic-bezier(.22,.9,.32,1);z-index:80;display:flex;flex-direction:column}
@@ -210,7 +215,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .m-gift-top{display:flex;align-items:center;gap:12px;padding:64px 18px 16px;border-bottom:1px solid #1c1e24}
 .m-back-btn{width:34px;height:34px;border-radius:50%;background:#17181b;border:1px solid #2c2e33;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:16px}
 .m-gift-title{font-size:14px;font-weight:900;color:#fff;letter-spacing:.6px;text-transform:uppercase}
-.m-gift-body{flex:1;padding:20px 20px 0;overflow-y:auto}
+.m-gift-body{flex:1;padding:20px 20px 0;overflow-y:auto;position:relative}
+
+/* ── Pop notification (double-tap style confirmation burst) ── */
+.fa-pop-notif{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);pointer-events:none;z-index:950;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0}
+.fa-pop-notif.show{animation:popNotif 1.15s cubic-bezier(.22,.9,.32,1) forwards}
+@keyframes popNotif{
+  0%{transform:translate(-50%,-50%) scale(.3);opacity:0}
+  18%{transform:translate(-50%,-50%) scale(1.18);opacity:1}
+  32%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  78%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(1.25);opacity:0}
+}
+.fa-pop-icon{width:78px;height:78px;border-radius:50%;background:rgba(6,112,240,.18);border:2px solid rgba(6,112,240,.45);display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 0 44px rgba(6,112,240,.4)}
+.fa-pop-label{background:#17181b;border:1px solid #2c2e33;color:#fff;font-size:12px;font-weight:800;padding:7px 16px;border-radius:16px;white-space:nowrap}
 .m-item-card{display:flex;align-items:center;gap:12px;background:#17181b;border:1px solid #232529;border-radius:14px;padding:14px;margin-bottom:20px}
 .m-item-card img{width:52px;height:52px;border-radius:9px;object-fit:cover;background:#26282c}
 .m-item-card-name{font-size:13px;font-weight:800;color:#fff}
@@ -244,8 +262,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .fa-numpad{position:absolute;left:0;right:0;bottom:0;background:#d1d3d9;border-top:1px solid #b8bac0;padding:10px 14px 24px;transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.9,.32,1);z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
 .fa-numpad.show{transform:translateY(0)}
 .fa-num-row{display:flex;justify-content:center;gap:10px;margin-bottom:10px}
-.fa-num-key{background:#fff;border:none;border-radius:10px;height:52px;flex:1;max-width:88px;font-size:19px;font-weight:600;color:#000;box-shadow:0 1px 0 rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s}
+.fa-num-key{position:relative;background:#fff;border:none;border-radius:10px;height:52px;flex:1;max-width:88px;font-size:19px;font-weight:600;color:#000;box-shadow:0 1px 0 rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .09s cubic-bezier(.2,.9,.4,1.4),background .09s ease,box-shadow .09s ease}
 .fa-num-key:active{background:#a9abb3}
+.fa-num-key.kb-pressed{transform:scale(1.12) translateY(-3px);background:#f4f5f7;box-shadow:0 5px 0 rgba(0,0,0,.3),0 10px 18px rgba(0,0,0,.3);z-index:3}
 .fa-num-key.spacer{background:transparent;box-shadow:none;cursor:default}
 
 /* ── Processing payment screen ── */
@@ -260,8 +279,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .m-keyboard{position:absolute;left:0;right:0;bottom:0;background:#d1d3d9;border-top:1px solid #b8bac0;padding:8px 4px 24px;transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.9,.32,1);z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
 .m-keyboard.show{transform:translateY(0)}
 .m-kb-row{display:flex;justify-content:center;gap:6px;margin-bottom:8px}
-.m-kb-key{background:#fff;border:none;border-radius:6px;height:42px;flex:1;max-width:34px;font-size:16px;font-weight:500;color:#000;box-shadow:0 1px 0 rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s}
+.m-kb-key{position:relative;background:#fff;border:none;border-radius:6px;height:42px;flex:1;max-width:34px;font-size:16px;font-weight:500;color:#000;box-shadow:0 1px 0 rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .09s cubic-bezier(.2,.9,.4,1.4),background .09s ease,box-shadow .09s ease}
 .m-kb-key:active{background:#a9abb3}
+.m-kb-key.kb-pressed{transform:scale(1.35) translateY(-14px);background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.25),0 12px 20px rgba(0,0,0,.35);z-index:5}
+.m-kb-key.wide.kb-pressed,.m-kb-key.space.kb-pressed,.m-kb-key.enter.kb-pressed{transform:scale(1.05) translateY(-2px)}
+
+/* iOS-style magnified key callout bubble */
+.kb-callout{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%) scale(.4);width:40px;height:48px;background:#fff;border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:600;color:#000;pointer-events:none;opacity:0;transition:opacity .1s ease,transform .1s cubic-bezier(.2,.9,.4,1.4);z-index:10}
+.kb-callout.show{opacity:1;transform:translateX(-50%) scale(1)}
 .m-kb-key.wide{max-width:none;flex:1.6;font-size:13px;font-weight:600;background:#aeb1b8}
 .m-kb-key.space{max-width:none;flex:5}
 .m-kb-key.enter{max-width:none;flex:1.6;background:var(--blue);color:#fff;font-size:14px;font-weight:700}
@@ -505,23 +530,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 <div id="LAYOUT_C">
   <div class="phone-stage">
     <div class="phone-frame">
+      <!-- Always-on-top overlay: notch, status bar, home indicator. Never scrolls, never covered by any screen. -->
+      <div class="phone-statusbar">
+        <span id="mClock">9:41</span>
+        <div class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="4.5" y="5" width="3" height="7" rx="0.5"/><rect x="9" y="3" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 9.5a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM4.7 6.8a4.7 4.7 0 016.6 0l-1.4 1.4a2.7 2.7 0 00-3.8 0L4.7 6.8zM2 4.1a8.5 8.5 0 0112 0L12.6 5.5a6.5 6.5 0 00-9.2 0L2 4.1z" fill="#fff"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="#fff" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="1.3" fill="#fff"/><rect x="23" y="4" width="1.5" height="4" rx="0.7" fill="#fff" opacity=".4"/></svg>
+        </div>
+      </div>
       <div class="phone-notch"></div>
       <div class="phone-home-indicator"></div>
-      <div class="phone-screen" id="phoneScreen">
-        <div class="phone-statusbar">
-          <span id="mClock">9:41</span>
-          <div class="status-icons">
-            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="4.5" y="5" width="3" height="7" rx="0.5"/><rect x="9" y="3" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 9.5a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM4.7 6.8a4.7 4.7 0 016.6 0l-1.4 1.4a2.7 2.7 0 00-3.8 0L4.7 6.8zM2 4.1a8.5 8.5 0 0112 0L12.6 5.5a6.5 6.5 0 00-9.2 0L2 4.1z" fill="#fff"/></svg>
-            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="#fff" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="1.3" fill="#fff"/><rect x="23" y="4" width="1.5" height="4" rx="0.7" fill="#fff" opacity=".4"/></svg>
-          </div>
-        </div>
+      <div class="fa-pop-notif" id="mPopNotif"></div>
 
+      <div class="phone-screen" id="phoneScreen">
         <div class="fa-topbar">
           <button class="fa-hamburger" onclick="openSettings()">☰</button>
           <span class="fa-wordmark">FORTNITE</span>
+
           <div class="fa-vbucks-pill" onclick="mSetCategory('vbucks')">
-            <span class="coin">V</span>
+            <img class="coin" src="/assets/vbucks-icon.png" alt="V-Bucks">
             <span>2,800</span>
           </div>
           <button class="fa-install-pill">Install</button>
@@ -581,7 +609,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
               </div>
             </div>
             <label class="m-field-label" for="mUsernameInput">Send to</label>
-            <input class="m-username-input" id="mUsernameInput" type="text" placeholder="Search username..." autocomplete="off" readonly>
+            <input class="m-username-input" id="mUsernameInput" type="text" placeholder="Search username..." autocomplete="off" inputmode="text">
             <div class="m-player-found-mobile" id="mPlayerFound"></div>
 
             <div class="fa-choose-label">Choose a gift</div>
@@ -602,8 +630,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
             <div class="m-kb-row" id="mKbRow2"></div>
             <div class="m-kb-row" id="mKbRow3"></div>
             <div class="m-kb-row">
-              <button class="m-kb-key space" onclick="mKbType(' ')">space</button>
-              <button class="m-kb-key enter" onclick="mKbEnter()">done</button>
+              <button class="m-kb-key space" onpointerdown="mKeyPress(this)" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mKbType(' ')">space</button>
+              <button class="m-kb-key enter" onpointerdown="mKeyPress(this)" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mKbEnter()">done</button>
             </div>
           </div>
         </div>
@@ -1083,29 +1111,35 @@ function mRenderGrid(){
 
   if(mActiveCat==='vbucks'){
     gridEl.style.display='none';
-    vbEl.style.display='flex';
+    vbEl.style.display='grid';
     document.getElementById('mGridTitle').textContent='V-BUCKS';
     const vb=items.filter(i=>i.type==='vbucks');
-    vbEl.innerHTML=vb.map(p=>{
-      let oldHtml='', bonusHtml='';
+    vbEl.innerHTML=vb.map((p,i)=>{
+      let oldHtml='', bonusBadge='';
       if(p.bonus>0){
         const cur=parseInt(p.bucks.replace(/,/g,''));
         const base=Math.round((cur/(1+p.bonus/100))/10)*10;
         const extra=cur-base;
-        oldHtml=`<span class="fa-vb-amt-old">${base.toLocaleString()}</span>`;
-        bonusHtml=`<div class="fa-vb-bonus">+${extra.toLocaleString()} more</div>`;
+        oldHtml=`<span class="fa-vbcard-amt-old">${base.toLocaleString()}</span>`;
+        bonusBadge=`<div class="fa-vbcard-bonus-badge">+${p.bonus}% EXTRA</div>`;
       }
       return `
-      <div class="fa-vb-row" data-id="${p.id}">
-        <img class="fa-vb-icon" src="${p.img}" alt="" onerror="this.style.background='${p.color}'">
-        <div class="fa-vb-mid">
-          <div class="fa-vb-amt"><span class="fa-vb-amt-new">${p.bucks}</span>${oldHtml}</div>
-          ${bonusHtml}
+      <div class="fa-vbcard" style="animation-delay:${i*0.05}s" data-id="${p.id}">
+        <div class="fa-vbcard-img-wrap">
+          <img src="${p.img}" alt="" onerror="this.parentElement.style.background='${p.color}'">
+          ${bonusBadge}
         </div>
-        <button class="fa-vb-buy" data-id="${p.id}">CA$${p.price}</button>
+        <div class="fa-vbcard-body">
+          <div class="fa-vbcard-amt"><span class="fa-vbcard-amt-new">${p.bucks}</span>${oldHtml}</div>
+          <div class="fa-vbcard-sub">V-Bucks</div>
+          <div class="fa-vbcard-bottom">
+            <div class="fa-vbcard-price">CA$${p.price}</div>
+            <button class="fa-vbcard-buy" data-id="${p.id}">🎁 Gift</button>
+          </div>
+        </div>
       </div>`;
     }).join('');
-    vbEl.querySelectorAll('.fa-vb-buy').forEach(btn=>{
+    vbEl.querySelectorAll('.fa-vbcard-buy').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         const item=vb.find(p=>p.id==btn.dataset.id);
         if(item)mOpenGift(item);
@@ -1184,9 +1218,22 @@ function mCloseGift(){
 
 // ── Virtual QWERTY keyboard (username search) ──
 function mKbBuildRows(){
-  document.getElementById('mKbRow1').innerHTML=['q','w','e','r','t','y','u','i','o','p'].map(k=>`<button class="m-kb-key" onclick="mKbType('${k}')">${k}</button>`).join('');
-  document.getElementById('mKbRow2').innerHTML=['a','s','d','f','g','h','j','k','l'].map(k=>`<button class="m-kb-key" onclick="mKbType('${k}')">${k}</button>`).join('');
-  document.getElementById('mKbRow3').innerHTML=['z','x','c','v','b','n','m'].map(k=>`<button class="m-kb-key" onclick="mKbType('${k}')">${k}</button>`).join('')+'<button class="m-kb-key wide" onclick="mKbBackspace()">⌫</button>';
+  const letterKey=k=>`<button class="m-kb-key" onpointerdown="mKeyPress(this,'${k}')" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mKbType('${k}')"><span class="kb-callout">${k}</span>${k}</button>`;
+  document.getElementById('mKbRow1').innerHTML=['q','w','e','r','t','y','u','i','o','p'].map(letterKey).join('');
+  document.getElementById('mKbRow2').innerHTML=['a','s','d','f','g','h','j','k','l'].map(letterKey).join('');
+  document.getElementById('mKbRow3').innerHTML=['z','x','c','v','b','n','m'].map(letterKey).join('')+'<button class="m-kb-key wide" onpointerdown="mKeyPress(this)" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mKbBackspace()">⌫</button>';
+}
+function mKeyPress(el, char){
+  el.classList.add('kb-pressed');
+  if(char){
+    const callout=el.querySelector('.kb-callout');
+    if(callout) callout.classList.add('show');
+  }
+}
+function mKeyRelease(el){
+  el.classList.remove('kb-pressed');
+  const callout=el.querySelector('.kb-callout');
+  if(callout) callout.classList.remove('show');
 }
 function mKbType(ch){
   const input=document.getElementById('mUsernameInput');
@@ -1219,11 +1266,23 @@ async function mFindPlayerMobile(){
   const res=await fetch('/api/find-player?q='+encodeURIComponent(q));
   player=await res.json();
   const el=document.getElementById('mPlayerFound');
+  const wasShown=el.classList.contains('show');
   el.innerHTML=`<div class="m-pfp-avatar" style="background:${player.color}">${player.initial}</div><div><div style="font-size:13px;font-weight:700;color:#fff">${player.username}</div><div style="font-size:11px;color:#7a8494">Level ${player.level}</div></div><div style="margin-left:auto;color:#0fc864;font-size:16px">✓</div>`;
   el.classList.add('show');
   document.getElementById('mContinueBtn').disabled=false;
+  if(!wasShown) mShowPopNotif('✓', 'Player found!');
+}
+
+function mShowPopNotif(icon, label){
+  const el=document.getElementById('mPopNotif');
+  el.classList.remove('show');
+  void el.offsetWidth; // restart animation if fired again quickly
+  el.innerHTML=`<div class="fa-pop-icon">${icon}</div><div class="fa-pop-label">${label}</div>`;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1200);
 }
 document.getElementById('mUsernameInput').addEventListener('click', mKbShow);
+document.getElementById('mUsernameInput').addEventListener('input', mDebounceFind);
 
 // ── Verify code screen (OTP) — any 6-digit code is accepted (demo) ──
 function mGoToVerify(){
@@ -1240,9 +1299,10 @@ function mGoToVerify(){
   mNumpadShow();
 }
 function mNumpadBuild(){
+  const numKey=d=>`<button class="fa-num-key" onpointerdown="mKeyPress(this,'${d}')" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mOtpType('${d}')"><span class="kb-callout">${d}</span>${d}</button>`;
   const rows=[['1','2','3'],['4','5','6'],['7','8','9']];
-  let html=rows.map(r=>`<div class="fa-num-row">${r.map(d=>`<button class="fa-num-key" onclick="mOtpType('${d}')">${d}</button>`).join('')}</div>`).join('');
-  html+=`<div class="fa-num-row"><div class="fa-num-key spacer"></div><button class="fa-num-key" onclick="mOtpType('0')">0</button><button class="fa-num-key" onclick="mOtpBackspace()">⌫</button></div>`;
+  let html=rows.map(r=>`<div class="fa-num-row">${r.map(numKey).join('')}</div>`).join('');
+  html+=`<div class="fa-num-row"><div class="fa-num-key spacer"></div>${numKey('0')}<button class="fa-num-key" onpointerdown="mKeyPress(this)" onpointerup="mKeyRelease(this)" onpointerleave="mKeyRelease(this)" onclick="mOtpBackspace()">⌫</button></div>`;
   document.getElementById('mNumpad').innerHTML=html;
 }
 function mNumpadShow(){ document.getElementById('mNumpad').classList.add('show'); }

@@ -2079,24 +2079,29 @@ function toggleAutoGift(){
     if(layoutMode==='C') mResetScreens();
     if(layoutMode==='A'){ document.getElementById('PDP_OVERLAY').classList.remove('open'); document.getElementById('CHECKOUT_OVERLAY').classList.remove('open'); document.getElementById('RECEIPT_OVERLAY').classList.remove('open'); }
   } else {
-    // START
+    // START — always switch to Layout C (mobile phone view) for auto gifting
     autoGiftOn = true;
     const btn = document.getElementById('autoGiftBtn');
     const label = document.getElementById('autoGiftLabel');
     btn.classList.add('on');
     label.textContent = 'Stop';
     const myRunId = ++autoRunId;
-    // Route to correct layout cycle
-    if(layoutMode==='C'){
-      mobileAutoLoop(myRunId);
-    } else if(layoutMode==='A'){
-      desktopAutoLoop(myRunId);
-    } else {
-      // Default: switch to C
+    // Always run mobile loop (switch to C if not already)
+    if(layoutMode !== 'C'){
       setLayout('C');
-      layoutMode='C';
-      setTimeout(()=>{ if(autoGiftOn) mobileAutoLoop(myRunId); }, 300);
+      layoutMode = 'C';
     }
+    // Wait for layout + items to be ready
+    setTimeout(function(){
+      if(autoGiftOn && myRunId === autoRunId){
+        if(!ALL_ITEMS.length){
+          // Items not loaded yet — wait for loadItems
+          loadItems().then(()=>{ if(autoGiftOn && myRunId===autoRunId) mobileAutoLoop(myRunId); });
+        } else {
+          mobileAutoLoop(myRunId);
+        }
+      }
+    }, 400);
   }
 }
 

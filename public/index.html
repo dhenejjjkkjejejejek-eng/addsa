@@ -1873,7 +1873,7 @@ async function mFinishPayment(){
     body:JSON.stringify({itemName:selected.type==='vbucks'?selected.bucks+' V-Bucks':selected.name,price:selected.price,recipient:player.username})
   }).then(r=>r.json());
   lastTxn=data;
-  var _ps=document.getElementById('mProcessingScreen'); if(_ps) _ps.classList.remove('open');
+  document.getElementById('mProcessingScreen').classList.remove('open');
   mShowMobileReceipt(data);
 }
 function mShowMobileReceipt(data){
@@ -1894,7 +1894,7 @@ function mCloseMobileReceipt(){
 function mResetScreens(){
   document.getElementById('mGiftScreen').classList.remove('open');
   document.getElementById('mVerifyScreen').classList.remove('open');
-  var _ps=document.getElementById('mProcessingScreen'); if(_ps) _ps.classList.remove('open');
+  document.getElementById('mProcessingScreen').classList.remove('open');
   document.getElementById('mReceiptOverlay').classList.remove('show');
   mKbHide();
   mNumpadHide();
@@ -2169,174 +2169,143 @@ async function desktopAutoLoop(runId){
 }
 
 /* ─── LAYOUT C (mobile phone) auto loop ─── */
-const AUTO_USERNAMES = [
-  'NightWolf99','xShadowKing','FrostedBlade','CrimsonStrike','VoidHunter',
-  'StarlightXO','NeonRaider','BlitzRunner','CosmicFury','IronPhantom',
-  'DuskHunter','GalacticAce','ThunderBolt77','SilentArrow','PixelRanger',
-  'ArcticFox22','DarkMatter11','StormBreaker','LunarWolf','GhostBlade99',
-  'OmegaStrike','VortexKing','ChaosRaider','PhantomDrift','NovaBlast',
-  'ShadowFang','IceBlade','TitanX','WarpZone','CrimsonDawn'
-];
-
-function addAutoLog(item, username, txnId){
-  const log = document.getElementById('autoGiftLog');
-  if(!log) return;
-  const el = document.createElement('div');
-  el.className = 'auto-log-entry';
-  el.style.cssText = 'background:rgba(20,22,28,.92);border:1px solid #2c2e33;border-radius:10px;padding:8px 13px;font-size:12px;color:#fff;display:flex;flex-direction:column;gap:2px;animation:fadeInUp .3s ease;';
-  const name = item.type==='vbucks' ? (item.bucks+' V-Bucks') : item.name;
-  el.innerHTML = '<span style="font-weight:700;color:#0fc864">✓ Gift Sent</span><span style="color:#aaa">' + name + ' → ' + username + '</span><span style="color:#555;font-size:10px;">' + (txnId||'') + '</span>';
-  log.prepend(el);
-  while(log.children.length > 6) log.removeChild(log.lastChild);
-  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .4s'; setTimeout(()=>el.remove(),400); }, 7000);
-}
-
 async function mobileAutoLoop(runId){
   while(autoGiftOn && runId===autoRunId){
 
-    // ── Start fresh: go back to shop ──
-    // Close all screens by clicking back buttons if open
-    var backBtn = document.querySelector('#mGiftScreen .m-back-btn');
-    if(backBtn && document.getElementById('mGiftScreen').classList.contains('open')) backBtn.click();
-    await sleep(300); if(!autoGiftOn||runId!==autoRunId) break;
+    // ── RESET cleanly ──
+    document.getElementById('mGiftScreen').classList.remove('open');
+    document.getElementById('mVerifyScreen').classList.remove('open');
+    document.getElementById('mProcessingScreen').classList.remove('open');
+    document.getElementById('mReceiptOverlay').classList.remove('show');
+    mKbHide(); mNumpadHide();
+    if(window._iapBusy && window.closeIapSheet) closeIapSheet();
+    await sleep(600); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Pick random item and category ──
-    if(!ALL_ITEMS.length){ await loadItems(); await sleep(500); if(!autoGiftOn||runId!==autoRunId) break; }
+    // ── Pick item + username ──
+    if(!ALL_ITEMS.length){ await loadItems(); await sleep(500); }
     const items = ALL_ITEMS.filter(i=>enabled.has(i.id));
     if(!items.length){ await sleep(2000); continue; }
     const item = items[Math.floor(Math.random()*items.length)];
     const username = AUTO_USERNAMES[Math.floor(Math.random()*AUTO_USERNAMES.length)];
 
-    // ── Click a random category tab ──
-    const tabs = document.querySelectorAll('.fa-rail-btn');
-    if(tabs.length){ tabs[Math.floor(Math.random()*tabs.length)].click(); }
-    await sleep(600); if(!autoGiftOn||runId!==autoRunId) break;
-
-    // ── Click item's real category ──
+    // ── Browse random category then item's real category ──
+    const cats=['skins','pickaxes','vbucks','sprites'];
+    mSetCategory(cats[Math.floor(Math.random()*cats.length)]);
+    await sleep(700); if(!autoGiftOn||runId!==autoRunId) break;
     const itemCat = item.type==='vbucks'?'vbucks':(M_META[item.id]?M_META[item.id].cat:'skins');
-    const realTab = document.querySelector('.fa-rail-btn[data-cat="'+itemCat+'"]');
-    if(realTab) realTab.click();
+    mSetCategory(itemCat);
     await sleep(500); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Click the Gift button on the item card ──
+    // ── Flash item card ──
     const cardSel = itemCat==='vbucks'?'#mVbucksList .fa-vbcard':'#mGrid .fa-card';
-    const card = [...document.querySelectorAll(cardSel)].find(c=>c.dataset.id==item.id);
-    if(!card){ continue; }
-    card.scrollIntoView({behavior:'smooth',block:'center'});
-    await sleep(300); if(!autoGiftOn||runId!==autoRunId) break;
-    card.style.outline='2px solid var(--blue)'; card.style.transform='scale(1.04)';
-    await sleep(400);
-    card.style.outline=''; card.style.transform='';
-    // Click the Gift button inside the card
-    const cardGiftBtn = card.querySelector('.fa-gift-btn, .fa-vb-gift, button');
-    if(cardGiftBtn) cardGiftBtn.click();
-    else { mOpenGift(item); } // fallback
-    await sleep(700); if(!autoGiftOn||runId!==autoRunId) break;
+    const card=[...document.querySelectorAll(cardSel)].find(c=>c.dataset.id==item.id);
+    if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); await sleep(250); card.style.outline='2px solid var(--blue)'; card.style.transform='scale(1.04)'; await sleep(450); card.style.outline=''; card.style.transform=''; }
+    await sleep(250); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Type username into the search input ──
-    const inp = document.getElementById('mUsernameInput');
-    if(!inp){ continue; }
-    inp.focus();
-    inp.value = '';
-    inp.dispatchEvent(new Event('input',{bubbles:true}));
-    await sleep(200); if(!autoGiftOn||runId!==autoRunId) break;
+    // ── Open gift screen ──
+    selected=item; window.selected=item;
+    mOpenGift(item); mKbHide();
+    await sleep(650); if(!autoGiftOn||runId!==autoRunId) break;
 
+    // ── Type username (flash keys, write directly — no API) ──
+    const inp=document.getElementById('mUsernameInput');
+    inp.value=''; mKbShow(); await sleep(300);
     for(let ch of username){
       if(!autoGiftOn||runId!==autoRunId) break;
-      mFlashPhysicalKey('mKeyboard', ch);
-      inp.value += ch;
+      mFlashPhysicalKey('mKeyboard',ch);
+      inp.value+=ch;
       await sleep(90+Math.random()*55);
     }
-    await sleep(350); if(!autoGiftOn||runId!==autoRunId) break;
+    if(!autoGiftOn||runId!==autoRunId) break;
+    await sleep(350); mKbHide(); await sleep(350);
+    if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Inject fake player (bypass real API) ──
-    const fakeLevel = 50+Math.floor(Math.random()*250);
-    const fakePfp = FORTNITE_PFPS[Math.floor(Math.random()*FORTNITE_PFPS.length)];
-    mFoundCandidate = {username, displayName:username, level:fakeLevel, pfp:fakePfp};
-    const foundEl = document.getElementById('mPlayerFound');
-    foundEl.innerHTML = `<div class="m-select-card" id="mSelectCard"><img class="m-pfp-avatar" src="${fakePfp}" alt="" onerror="this.style.display='none'"><div><div style="font-size:13px;font-weight:700;color:#fff">${username}</div><div style="font-size:11px;color:#7a8494">Level ${fakeLevel}</div></div><div class="m-select-check">✓</div></div><div class="m-select-hint">Tap to select this player</div>`;
+    // ── Inject fake player card ──
+    const fakeLevel=50+Math.floor(Math.random()*250);
+    const fakePfp=FORTNITE_PFPS[Math.floor(Math.random()*FORTNITE_PFPS.length)];
+    mFoundCandidate={username,displayName:username,level:fakeLevel,pfp:fakePfp};
+    const foundEl=document.getElementById('mPlayerFound');
+    foundEl.innerHTML=`<div class="m-select-card" id="mSelectCard"><img class="m-pfp-avatar" src="${fakePfp}" alt="" onerror="this.style.display='none'"><div><div style="font-size:13px;font-weight:700;color:#fff">${username}</div><div style="font-size:11px;color:#7a8494">Level ${fakeLevel}</div></div><div class="m-select-check">✓</div></div><div class="m-select-hint">Tap to select this player</div>`;
     foundEl.classList.add('show');
-    document.getElementById('mSelectCard').addEventListener('click', mSelectFoundPlayer);
-    document.getElementById('mContinueBtn').disabled = true;
-    player = null;
-    // Hide keyboard by blurring input
-    inp.blur();
+    document.getElementById('mSelectCard').addEventListener('click',mSelectFoundPlayer);
+    document.getElementById('mContinueBtn').disabled=true; player=null;
     await sleep(600); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Click the player card ──
-    const sc = document.getElementById('mSelectCard');
-    if(!sc){ continue; }
-    sc.style.outline = '2px solid var(--blue)';
-    await sleep(200);
-    sc.style.outline = '';
-    sc.click(); // → mSelectFoundPlayer
-    await sleep(500); if(!autoGiftOn||runId!==autoRunId) break;
+    // ── Select player ──
+    const sc=document.getElementById('mSelectCard');
+    if(sc){ sc.style.outline='2px solid var(--blue)'; await sleep(200); sc.style.outline=''; sc.click(); }
+    await sleep(450); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── Click Gift button ──
-    const giftBtn = document.getElementById('mContinueBtn');
+    // ── Tap Gift ──
+    const giftBtn=document.getElementById('mContinueBtn');
     if(!giftBtn||giftBtn.disabled){ continue; }
-    giftBtn.click(); // → mGoToVerify() — full normal flow from here
-    await sleep(900); if(!autoGiftOn||runId!==autoRunId) break;
+    giftBtn.click();  // → mGoToVerify() → opens IAP sheet normally
+    await sleep(950); if(!autoGiftOn||runId!==autoRunId) break;
 
-    // ── IAP: auto-confirm ──
+    // ── IAP: auto-confirm (or skip per settings) ──
     if(GIFT_SKIP_ALL){
       await mRunFinishPayment();
-      await sleep(400); if(!autoGiftOn||runId!==autoRunId) break;
-    } else {
-      if(!GIFT_SKIP_DOUBLETAP){
-        initIapSheet();
-        if(window.openIapSheet) window.openIapSheet();
-        await sleep(900); if(!autoGiftOn||runId!==autoRunId) break;
-        if(window.doConfirmIap) window.doConfirmIap();
-        await sleep(2800); if(!autoGiftOn||runId!==autoRunId) break;
-        // iapAlertOk opens verify screen automatically
-        const ok = document.getElementById('iapAlertOk');
-        if(ok) ok.click();
-        await sleep(900); if(!autoGiftOn||runId!==autoRunId) break;
-      } else {
-        // Skip IAP — open verify directly
-        mOtp=['','','','','',''];
-        if(!mNumpadBuilt){mNumpadBuild();mNumpadBuilt=true;}
-        const vb=document.getElementById('mVerifyBtn'); if(vb){vb.disabled=true;vb.textContent='Verify Code →';}
-        mRenderOtp();
-        document.getElementById('mVerifyScreen').classList.add('open');
-        mNumpadShow();
-        await sleep(600); if(!autoGiftOn||runId!==autoRunId) break;
+      await sleep(400);
+      if(!autoGiftOn||runId!==autoRunId) break;
+      // tap Done
+      for(let a=0;a<20&&autoGiftOn&&runId===autoRunId;a++){
+        const ov=document.getElementById('mReceiptOverlay');
+        if(ov&&ov.classList.contains('show')){ const db=ov.querySelector('.fa-mreceipt-done'); if(db){db.click();break;} }
+        await sleep(300);
       }
+      await sleep(700); continue;
+    }
 
-      if(!GIFT_SKIP_VERIFY){
-        // Type 6 digits on numpad
-        for(let i=0;i<6;i++){
-          if(!autoGiftOn||runId!==autoRunId) break;
-          const d = String(Math.floor(Math.random()*10));
-          mFlashPhysicalKey('mNumpad', d);
-          mOtpType(d);
-          await sleep(160+Math.random()*80);
-        }
-        await sleep(380); if(!autoGiftOn||runId!==autoRunId) break;
-        const vBtn = document.getElementById('mVerifyBtn');
-        if(vBtn&&!vBtn.disabled) vBtn.click();
-        await sleep(7500); if(!autoGiftOn||runId!==autoRunId) break;
-      } else {
-        await mRunFinishPayment();
-        await sleep(400); if(!autoGiftOn||runId!==autoRunId) break;
+    if(!GIFT_SKIP_DOUBLETAP){
+      // Full IAP flow — auto-confirm
+      initIapSheet();
+      if(window.openIapSheet) window.openIapSheet();
+      await sleep(900); if(!autoGiftOn||runId!==autoRunId) break;
+      if(window.doConfirmIap) window.doConfirmIap();
+      await sleep(2800); if(!autoGiftOn||runId!==autoRunId) break;
+      // iapAlertOk click → opens mVerifyScreen + numpad automatically
+      const ok=document.getElementById('iapAlertOk');
+      if(ok) ok.click();
+      await sleep(900); if(!autoGiftOn||runId!==autoRunId) break;
+    } else {
+      // Skip IAP → open verify directly (mirror what iapAlertOk does)
+      mOtp=['','','','','',''];
+      if(!mNumpadBuilt){mNumpadBuild();mNumpadBuilt=true;}
+      const vb=document.getElementById('mVerifyBtn'); if(vb){vb.disabled=true;vb.textContent='Verify Code →';}
+      mRenderOtp();
+      document.getElementById('mVerifyScreen').classList.add('open');
+      mNumpadShow();
+      await sleep(600); if(!autoGiftOn||runId!==autoRunId) break;
+    }
+
+    // ── OTP: type 6 digits ──
+    if(!GIFT_SKIP_VERIFY){
+      for(let i=0;i<6;i++){
+        if(!autoGiftOn||runId!==autoRunId) break;
+        const d=String(Math.floor(Math.random()*10));
+        mFlashPhysicalKey('mNumpad',d); mOtpType(d);
+        await sleep(160+Math.random()*80);
       }
+      await sleep(380); if(!autoGiftOn||runId!==autoRunId) break;
+      const vBtn=document.getElementById('mVerifyBtn');
+      if(vBtn&&!vBtn.disabled) vBtn.click();
+      // mVerifyCode handles processing → securing → receipt internally
+      await sleep(7500); if(!autoGiftOn||runId!==autoRunId) break;
+    } else {
+      await mRunFinishPayment();
+      await sleep(400); if(!autoGiftOn||runId!==autoRunId) break;
     }
 
     // ── Log + tap Done ──
-    addAutoLog(item, username, lastTxn?lastTxn.transactionId:'PP-'+Math.random().toString(36).slice(2,10).toUpperCase());
+    addAutoLog(item,username,lastTxn?lastTxn.transactionId:'PP-'+Math.random().toString(36).slice(2,10).toUpperCase());
     for(let a=0;a<20&&autoGiftOn&&runId===autoRunId;a++){
-      const ov = document.getElementById('mReceiptOverlay');
-      if(ov&&ov.classList.contains('show')){
-        const db = ov.querySelector('.fa-mreceipt-done');
-        if(db){ db.click(); break; }
-      }
+      const ov=document.getElementById('mReceiptOverlay');
+      if(ov&&ov.classList.contains('show')){ const db=ov.querySelector('.fa-mreceipt-done'); if(db){db.click();break;} }
       await sleep(300);
     }
     await sleep(800);
   }
-
-  // Loop ended
+  // Loop ended — reset button state
   if(runId===autoRunId){
     autoGiftOn=false;
     const btn=document.getElementById('autoGiftBtn');
@@ -2346,4 +2315,121 @@ async function mobileAutoLoop(runId){
   }
 }
 
+/* Legacy wrapper for layout A/B runAutoGiftCycle calls */
+function runAutoGiftCycle(){
+  if(!autoGiftOn) return;
+  if(layoutMode==='C'){ mobileAutoLoop(autoRunId); return; }
+  desktopAutoLoop(autoRunId);
+}
+function runMobileAutoGiftCycle(){ mobileAutoLoop(autoRunId); }
 
+
+var _iapBusy = false;
+var _iapListenersAdded = false;
+
+function _iap(id){ return document.getElementById(id); }
+
+function initIapSheet(){
+  if(_iapListenersAdded) return;
+  var sheet = _iap('iapSheet');
+  if(!sheet) return; // elements not in DOM yet
+  _iapListenersAdded = true;
+
+  function openIapSheet(){
+    if(!selected) selected = window.selected;
+    if(!selected) return;
+    _iapBusy = false;
+    var isV = selected.type === 'vbucks';
+    _iap('iapItemName').textContent = isV ? (selected.bucks+' V-Bucks') : selected.name;
+    _iap('iapItemPrice').textContent = '$'+selected.price;
+
+    // Reset
+    _iap('iapSheet').classList.remove('processing');
+    _iap('iapProcArea').style.display = 'none';
+    _iap('iapConfirmArea').style.display = '';
+    _iap('iapDoneIcon').classList.remove('animate');
+    _iap('iapDoneIcon').style.display = 'none';
+    _iap('iapProcArea').querySelector('.iap-proc-ring').style.display = 'block';
+    _iap('iapProcLabel').textContent = 'Processing';
+    _iap('iapAlert').classList.remove('show');
+
+    // Show
+    _iap('iapScrim').style.display = 'block';
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        _iap('iapSheet').classList.add('show');
+      });
+    });
+    _iap('iapSideBar').classList.add('pulsing');
+    var dbl = _iap('mDblClick');
+    if(dbl){ dbl.style.display='flex'; setTimeout(function(){ dbl.style.opacity='1'; },50); }
+  }
+  window.openIapSheet = openIapSheet;
+
+  function closeIapSheet(){
+    _iap('iapSheet').classList.remove('show','processing');
+    _iap('iapScrim').style.display = 'none';
+    _iap('iapAlert').classList.remove('show');
+    _iap('iapSideBar').classList.remove('pulsing');
+    var dbl = _iap('mDblClick');
+    if(dbl){ dbl.style.opacity='0'; dbl.style.display='none'; }
+    _iapBusy = false;
+  }
+  window.closeIapSheet = closeIapSheet;
+
+  function doConfirm(){
+    if(_iapBusy) return;
+    _iapBusy = true;
+    _iap('iapSideBar').classList.remove('pulsing');
+    var dbl = _iap('mDblClick');
+    if(dbl){ dbl.style.opacity='0'; setTimeout(function(){ dbl.style.display='none'; },300); }
+
+    _iap('iapSheet').classList.add('processing');
+    _iap('iapProcArea').style.display = 'flex';
+
+    setTimeout(function(){
+      _iap('iapProcArea').querySelector('.iap-proc-ring').style.display = 'none';
+      _iap('iapDoneIcon').style.display = 'block';
+      _iap('iapProcLabel').textContent = 'Done';
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ _iap('iapDoneIcon').classList.add('animate'); });
+      });
+    }, 1500);
+
+    setTimeout(function(){
+      _iap('iapAlert').classList.add('show');
+    }, 2400);
+  }
+  window.doConfirmIap = doConfirm;
+
+  // Listeners (added only once)
+  _iap('iapScrim').addEventListener('click', function(e){
+    if(!_iapBusy && e.target===_iap('iapScrim')) closeIapSheet();
+  });
+  _iap('iapSheet').addEventListener('click', function(e){ e.stopPropagation(); });
+  _iap('iapSideBtnWrap').addEventListener('click', function(e){ e.stopPropagation(); doConfirm(); });
+  var dblEl = _iap('mDblClick');
+  if(dblEl) dblEl.addEventListener('click', function(e){ e.stopPropagation(); doConfirm(); });
+  _iap('iapXBtn').addEventListener('click', function(){ if(!_iapBusy) closeIapSheet(); });
+
+  _iap('iapAlertOk').addEventListener('click', function(){
+    closeIapSheet();
+    if(GIFT_SKIP_VERIFY){
+      // Skip verify → straight to processing → receipt
+      mRunFinishPayment();
+      return;
+    }
+    mOtp = ['','','','','',''];
+    if(!mNumpadBuilt){ mNumpadBuild(); mNumpadBuilt=true; }
+    var vBtn = _iap('mVerifyBtn');
+    if(vBtn){ vBtn.disabled=true; vBtn.textContent='Verify Code →'; }
+    mRenderOtp();
+    var vs = _iap('mVerifyScreen');
+    if(vs) vs.classList.add('open');
+    mNumpadShow();
+  });
+}
+
+</script>
+</body>
+</html>
